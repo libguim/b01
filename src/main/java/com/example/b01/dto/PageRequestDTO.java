@@ -26,6 +26,8 @@ public class PageRequestDTO {
 
     private String keyword;
 
+    private String link;
+
     public String[] getTypes() {
         if(type == null || type.isEmpty()) {
             return null;
@@ -36,8 +38,6 @@ public class PageRequestDTO {
     public Pageable getPageable(String... props) {
         return PageRequest.of(this.page -1, this.size, Sort.by(props).descending());
     }
-
-    private String link;
 
     public String getLink() {
         if(link == null) {
@@ -60,4 +60,5 @@ public class PageRequestDTO {
         }
         return link;
     }
+
 }

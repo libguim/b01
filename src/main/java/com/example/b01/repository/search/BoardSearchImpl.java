@@ -16,6 +16,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
     public BoardSearchImpl() {
         super(Board.class);
     }
+
     @Override
     public Page<Board> search1(Pageable pageable) {
         QBoard board = QBoard.board; //Q도메인 객체

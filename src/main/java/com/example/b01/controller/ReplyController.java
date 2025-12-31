@@ -1,0 +1,62 @@
+package com.example.b01.controller;
+
+import com.example.b01.dto.PageRequestDTO;
+import com.example.b01.dto.PageResponseDTO;
+import com.example.b01.dto.ReplyDTO;
+import com.example.b01.repository.ReplyRepository;
+import com.example.b01.service.ReplyService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.awt.*;
+import java.util.HashMap;
+import jakarta.validation.Valid;
+import java.util.Map;
+
+@RestController //Rest API
+@RequestMapping("/replies")
+@Log4j2
+@RequiredArgsConstructor //Dependency Injection
+public class ReplyController {
+
+    private final ReplyService replyService;
+
+//    @ApiOperation(value = "Replies POST", notes = "POST 방식으로 댓글 등록")
+    @PostMapping(value="", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Map<String,Long>> register(@Valid @RequestBody ReplyDTO replyDTO,
+//                                                     BindingResult bindingResult) throws BindException {
+    public Map<String,Long> register(@Valid @RequestBody ReplyDTO replyDTO,
+                                                     BindingResult bindingResult) throws BindException {
+
+        log.info(replyDTO);
+
+        if(bindingResult.hasErrors()){
+            throw new BindException(bindingResult);
+        }
+        Map<String,Long> resultMap = new HashMap<>();
+//        resultMap.put("rno", 111L);
+
+        Long rno = replyService.register(replyDTO);
+        resultMap.put("rno",rno);
+
+//        Map<String, Long> resultMap = Map.of("rno", 111L);
+
+        return resultMap;
+    }
+
+//    @ApiOperation(value = "Replies of Board", notes = "GET 방식으로 특정 게시물이 댓글 목록")
+    @GetMapping(value = "/list/{bno}")
+    public PageResponseDTO<ReplyDTO> getList(@PathVariable("bno") Long bno,
+                                             PageRequestDTO pageRequestDTO){
+
+        PageResponseDTO<ReplyDTO> responseDTO = replyService.getListOfBoard(bno, pageRequestDTO);
+
+        return responseDTO;
+    }
+
+}

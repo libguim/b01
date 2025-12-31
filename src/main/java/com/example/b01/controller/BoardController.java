@@ -1,6 +1,7 @@
 package com.example.b01.controller;
 
 import com.example.b01.dto.BoardDTO;
+import com.example.b01.dto.BoardListReplyCountDTO;
 import com.example.b01.dto.PageRequestDTO;
 import com.example.b01.dto.PageResponseDTO;
 import com.example.b01.service.BoardService;
@@ -13,7 +14,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
 @RequestMapping("/board")
@@ -26,8 +29,12 @@ public class BoardController {
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
 
-        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+//        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+        PageResponseDTO<BoardListReplyCountDTO> responseDTO =
+                boardService.listWithReplyCount(pageRequestDTO);
+
         log.info(responseDTO);
+
         model.addAttribute("responseDTO", responseDTO);
     }
 

@@ -2,6 +2,7 @@ package com.example.b01.controller.advice;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 @Log4j2
@@ -48,6 +50,22 @@ public class CustomRestAdvice {
 
         errorMap.put("time", ""+System.currentTimeMillis());
         errorMap.put("msg", "constraint fails");
+        return ResponseEntity.badRequest().body(errorMap);
+    }
+
+    //없는 rno 조회시, 예외처리 400 으로 응답
+    @ExceptionHandler({
+                        //select시 없을때
+                        NoSuchElementException.class,
+                        //delete시 없을때
+                        EmptyResultDataAccessException.class})
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    public ResponseEntity<Map<String, String>> handleNoSuchElementException(Exception e) {
+        log.error(e);
+        Map<String, String> errorMap = new HashMap<>();
+
+        errorMap.put("time", ""+System.currentTimeMillis());
+        errorMap.put("msg", "no Such Element Excpetion");
         return ResponseEntity.badRequest().body(errorMap);
     }
 

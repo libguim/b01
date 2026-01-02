@@ -59,4 +59,38 @@ public class ReplyController {
         return responseDTO;
     }
 
+//    @ApiOperation(value = "Read Reply", notes = "GET 방식으로 특정 댓글 조회")
+    @GetMapping("/{rno}")
+    public ReplyDTO getReplyDTO(@PathVariable("rno") Long rno){
+
+        ReplyDTO replyDTO = replyService.read(rno);
+
+        return replyDTO;
+
+    }
+
+//    @ApiOperation(value = "Delete Reply", notes = "DELETE 방식으로 특정 댓글 삭제")
+    @DeleteMapping("/{rno}")
+    public Map<String, Long> remove(@PathVariable("rno") Long rno){
+
+        replyService.remove(rno);
+
+        Map<String, Long> resultMap = new HashMap<>();
+
+        resultMap.put("rno",rno);
+
+        return resultMap;
+    }
+
+//    @ApiOperation(value = "Modify Reply", notes = "PUT 방식으로 특정 댓글 수정")
+    @PutMapping(value = "/{rno}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Long> remove(@PathVariable("rno") Long rno,
+                                    @RequestBody ReplyDTO replyDTO){
+        replyDTO.setRno(rno); //번호를 일치시킴
+        replyService.modify(replyDTO);
+        Map<String, Long> resultMap = new HashMap<>();
+        resultMap.put("rno",rno);
+        return resultMap;
+    }
+
 }
